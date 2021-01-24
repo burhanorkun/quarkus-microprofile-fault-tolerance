@@ -37,10 +37,8 @@ public class CoffeeRepositoryService {
                 .collect(Collectors.toList());
     }
 
-    // CircuitBreaker
     private AtomicLong counter = new AtomicLong(0);
 
-    @CircuitBreaker(requestVolumeThreshold = 4)
     public Integer getAvailability(Coffee coffee) {
         maybeFail();
         return new Random().nextInt(30);

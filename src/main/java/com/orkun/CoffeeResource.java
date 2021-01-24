@@ -27,7 +27,6 @@ public class CoffeeResource {
     private AtomicLong counter = new AtomicLong(0);
 
     @GET
-    @Retry(maxRetries = 4)  //default 3
     public List<Coffee> coffees() {
         final Long invocationNumber = counter.getAndIncrement();
 
@@ -46,8 +45,6 @@ public class CoffeeResource {
 
     @GET
     @Path("/{id}/recommendations")
-    @Timeout(250)  // default 1000
-    @Fallback(fallbackMethod = "fallbackRecommendations")
     public List<Coffee> recommendations(@PathParam("id") int id) {
         long started = System.currentTimeMillis();
         final long invocationNumber = counter.getAndIncrement();
