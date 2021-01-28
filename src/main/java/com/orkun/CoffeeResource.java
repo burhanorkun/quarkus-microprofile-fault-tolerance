@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.EOFException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -27,6 +28,8 @@ public class CoffeeResource {
     private AtomicLong counter = new AtomicLong(0);
 
     @GET
+    @Retry(maxRetries = 1)
+    @Fallback(fallbackMethod = "fallbackCoffees")
     public List<Coffee> coffees() {
         final Long invocationNumber = counter.getAndIncrement();
 
@@ -43,8 +46,15 @@ public class CoffeeResource {
         }
     }
 
+    public List<Coffee> fallbackCoffees(){
+        LOGGER.info("Falling back coffees()");
+        // safe bet, return something that everybody likes
+        return Collections.singletonList(new Coffee(4,"Turkish Caffee","Turkey",13));
+    }
+
     @GET
     @Path("/{id}/recommendations")
+    @Timeout()
     public List<Coffee> recommendations(@PathParam("id") int id) {
         long started = System.currentTimeMillis();
         final long invocationNumber = counter.getAndIncrement();
