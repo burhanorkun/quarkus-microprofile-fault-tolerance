@@ -39,6 +39,13 @@ public class CoffeeRepositoryService {
 
     private AtomicLong counter = new AtomicLong(0);
 
+    /**
+     * We also added a @CircuitBreaker annotation with requestVolumeThreshold = 4.
+     * CircuitBreaker.failureRatio is by default 0.5, and CircuitBreaker.delay is by default 5 seconds.
+     * That means that a circuit breaker will open when 2 of the last 4 invocations failed
+     * and it will stay open for 5 seconds.
+     **/
+    @CircuitBreaker(requestVolumeThreshold = 4)
     public Integer getAvailability(Coffee coffee) {
         maybeFail();
         return new Random().nextInt(30);

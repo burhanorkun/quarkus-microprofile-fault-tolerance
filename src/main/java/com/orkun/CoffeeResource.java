@@ -54,7 +54,7 @@ public class CoffeeResource {
 
     @GET
     @Path("/{id}/recommendations")
-    @Timeout()
+    @Timeout(250) //default 1000
     public List<Coffee> recommendations(@PathParam("id") int id) {
         long started = System.currentTimeMillis();
         final long invocationNumber = counter.getAndIncrement();
