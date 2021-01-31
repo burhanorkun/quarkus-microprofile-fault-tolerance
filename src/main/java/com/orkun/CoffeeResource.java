@@ -55,6 +55,7 @@ public class CoffeeResource {
     @GET
     @Path("/{id}/recommendations")
     @Timeout(250) //default 1000
+    @Fallback(fallbackMethod = "fallbackRecommendations")
     public List<Coffee> recommendations(@PathParam("id") int id) {
         long started = System.currentTimeMillis();
         final long invocationNumber = counter.getAndIncrement();
